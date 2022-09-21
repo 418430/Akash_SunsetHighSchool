@@ -8,6 +8,7 @@
 using namespace std;
 
 int main() {  
+//creates char array to read in string
   char str[81];
   char str2[81];
   char temp[81];
@@ -15,7 +16,7 @@ int main() {
   cin.get(str, 81);
   cin.get();
 
-
+//counts spaces and characters
   int spaces = 0;
   int counttemp = 0;
   for (int i = 0; i < strlen(str); i++) {
@@ -24,7 +25,7 @@ int main() {
     }
   }
   
-
+//makes everything lowercase
   for (int i = 0; i < strlen(str); i++) {
     if (str[i] != '\0' && str[i] != ' ' && !ispunct(str[i])) {
       temp[counttemp] = tolower(str[i]);
@@ -34,7 +35,7 @@ int main() {
 
   temp[strlen(str) - spaces] = '\0';
   
-  
+  //makes everything in this char array lowercase as well
   int count = 0;
   for (int i = strlen(str); i >= 0; i--) {
     if (str[i] != '\0' && str[i] != ' ' && !ispunct(str[i])) {
@@ -44,7 +45,7 @@ int main() {
   }
 
   str2[strlen(str) - spaces] = '\0';
-
+//checks if palindrome or not
   if (strcmp(temp, str2) == 0) {
     cout << "Palindrome" << endl;
   }
