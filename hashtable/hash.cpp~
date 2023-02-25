@@ -1,0 +1,175 @@
+#include <iostream>
+#include <iomanip>
+#include <vector>
+#include <iterator>
+#include <cstring>
+
+using namespace std;
+
+struct Student {
+  char fname[10];
+  char lname[10];
+  int id;
+  float gpa;
+public:
+  Student(char* newFN, char* newLN, int newID, float newGPA) {
+    strcpy(fname, newFN);
+    strcpy(lname, newLN);
+    id = newID;
+    gpa = newGPA;
+  }
+};
+
+class Node {
+  Student* student;
+  Node* next;
+
+public:
+  Node(Student* newStudent) {
+    student = newStudent;
+    next = NULL;
+  }
+
+  Student* getStudent() {
+    return student;
+  }
+  void setStudent(Student* newStudent) {
+    student = newStudent;
+  }
+
+  Node* getNext() {
+    return next;
+  }
+
+  void setNext(Node* newnext) {
+    next = newnext;
+  }
+};
+
+
+int hashFunction(int id, int size); //retrieved online
+void print(Node* &head);
+void del(Node* &head, Node* current, Node* previous, int ID);
+void add (Node* &head, Student* student);
+void totalCollisions(Node* &head, int &maxCollisions);
+
+
+int main() {
+  Node* head = NULL;
+  bool playing = true;
+  int size = 100;
+  Node** table = new Node*[size];
+  for (int i = 0; i < size; i++) {
+     table[i] = NULL;
+  }
+  int id = 0;
+  char move[20];
+  //main program, plays until quit statement
+  while (playing == true) {
+    move[0] = 0;
+    cout << "-----------------------------------------------------------------------" << endl;
+    cout << "Would you like to add, print, delete, average or quit (Enter ADD, PRINT, DELETE, AVERAGE, or QUIT)?" << endl;
+    cin >> move;
+    //enter variables
+    if(strcmp(move, "ADD") == 0) {
+      char* fname = new char[80];
+      cout << "Enter a first name" << endl;
+      cin >> fname;
+      char* lname = new char[80];
+      cout << "Enter a last name" << endl;
+      cin >> lname;
+      int id;
+      cout << "Enter an ID Number" << endl;
+      cin >> id;
+      float gpa;
+      cout << "Enter a GPA" << endl;
+      cin >> gpa;
+      Student* student = new Student(fname, lname, id, gpa);
+      int index = hashFunction(student->id, size);
+      add(table[index], student);
+      int maxCollisions = -1;
+      for (int i = 0; i < size; i++) {
+	totalCollisions(table[i], maxCollisions);
+      }
+      cout << "Max Collisions: " << maxCollisions << endl;
+    }
+    //decide what function to use
+    else if(strcmp(move, "PRINT") == 0) {
+      for (int i = 0; i < size; i++) {
+	print(table[i]);
+      }
+    }
+   
+    else if(strcmp(move, "DELETE") == 0) {
+      // int idT;
+      //cout << "Enter the ID of the student you'd like to delete" << endl;
+      //cin >> idT;
+      //deleteN(head, head->getNext(), head, idT);
+    }
+    else if(strcmp(move, "QUIT") == 0) {
+      playing = false;
+      break;
+    } 
+  }
+}
+
+void add (Node *&head, Student* student) {
+  Node * current = head;
+  if (head == NULL) {
+    Node * newnode = new Node(student);
+    head = newnode;
+  }
+  else {
+    while (current->getNext() != NULL) {
+      current = current->getNext();
+    }
+    Node * newnode = new Node (student);
+    current->setNext(newnode);
+  }
+}
+
+
+void print (Node * &head) {
+  if (head != NULL) {
+    while (head != NULL) {
+      cout << head->getStudent()->fname << " " << head->getStudent()->lname << ", " << head->getStudent()->id << ", ";
+      cout << setprecision(2) << fixed << head->getStudent()->gpa << endl;
+      head = head->getNext();
+    }
+  }
+}
+
+int hashFunction(int id, int size) {
+  return id % size;
+}
+
+void totalCollisions(Node* &head, int &maxCollisions) {
+  int temp = 0;
+  Node * current = head;
+  if (head == NULL) {
+    temp = 0;
+    if (temp > maxCollisions) {
+      maxCollisions = temp;
+    }
+  }
+  else {
+    int temp = 0;
+    while (current != NULL) {
+      current = current->getNext();
+      temp++;
+    }
+    if (temp > maxCollisions) {
+      maxCollisions = temp;
+    }
+  }
+}
+
+//randostudents
+//num collisions, if num collisions do sum shit w hash
+
+//add students, check for collisions, if more than three, make a temp array thats triple the size, fill it w nulls. put shit from one to the other
+//replace old hash table with the new rehashed one
+//add: recursion
+//print recursion
+  
+  
