@@ -1,0 +1,64 @@
+#include <iostream>
+#include <iomanip>
+#include <cstring>
+#include <array>
+#include <fstream>
+
+using namespace std;
+
+
+void print(int* &arr, int length) {
+  cout << "Printing" << endl;
+  for (int i = 0; i < length; i++) {
+    cout << arr[i] << endl;
+  }
+}
+
+void sort(int * &arr, int length) {
+  for(int j = 0; j < length; j++) {
+    for (int i = 0; i < length-1; i++) {
+      if (arr[i] > arr[i+1]) {
+	int temp = arr[i];
+	arr[i] = arr[i+1];
+	arr[i+1] = temp;
+      }
+    }
+  }
+}
+
+int main() {
+  char move[20];
+  int counter = 0;
+  int entering = -1;
+  int totalnums = -1;
+  int* heap = new int[100];
+  for (int i = 0; i < 100; i++) {
+    heap[i] = 0;
+  }
+  move[0] = 0;
+  cout << "Would you like to enter numbers from command line or file? (Enter CMD/FILE)" << endl;
+  cin >> move;
+  if (strcmp(move, "CMD") == 0) {
+    cout << "How many numbers would you like to enter (Max: 100)" << endl;
+    cin >> totalnums;
+    for (int i = 0; i < totalnums; i++) {
+      cout << "Enter your number" << endl;
+      cin >> entering;
+      heap[i] = entering;
+    }
+    print(heap, totalnums);
+  }
+  else if(strcmp(move, "FILE") == 0) {
+    fstream fin;
+    fin.open("numbers.txt");
+    totalnums = 0;
+    int num;
+    while (fin >> num) {
+      heap[counter] = num;
+      counter++;
+      totalnums++;
+    }
+    fin.close();
+    print(heap, totalnums);
+  }
+}
